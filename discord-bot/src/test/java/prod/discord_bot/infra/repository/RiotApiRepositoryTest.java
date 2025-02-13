@@ -30,7 +30,7 @@ class RiotApiRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        when(riotConfig.baseClient()).thenReturn(restClient);
+        when(riotConfig.baseClientV1()).thenReturn(restClient);
     }
 
     @Test

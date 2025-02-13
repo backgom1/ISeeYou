@@ -12,9 +12,17 @@ public class RiotConfig {
     private String apiKey;
 
     @Bean
-    public RestClient baseClient() {
+    public RestClient baseClientV1() {
         return RestClient.builder()
                 .baseUrl("https://asia.api.riotgames.com/")
+                .defaultHeader("X-Riot-Token",apiKey)
+                .build();
+    }
+
+    @Bean
+    public RestClient baseClientV5() {
+        return RestClient.builder()
+                .baseUrl("https://kr.api.riotgames.com/")
                 .defaultHeader("X-Riot-Token",apiKey)
                 .build();
     }
