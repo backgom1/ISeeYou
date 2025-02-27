@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
 import prod.discord_bot.dto.AccountDto;
-import prod.discord_bot.dto.SpectatorDto;
+import prod.discord_bot.dto.spectator.dto.SpectatorDto;
 import prod.discord_bot.dto.request.AccountRequest;
-import prod.discord_bot.dto.request.SpectatorRequest;
+import prod.discord_bot.dto.spectator.request.SpectatorRequest;
 import prod.discord_bot.presentation.exception.NotPlayingGameException;
 import prod.discord_bot.infra.config.RiotConfig;
 

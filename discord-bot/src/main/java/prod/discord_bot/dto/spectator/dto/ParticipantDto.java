@@ -1,4 +1,4 @@
-package prod.discord_bot.dto;
+package prod.discord_bot.dto.spectator.dto;
 
 import java.util.List;
 

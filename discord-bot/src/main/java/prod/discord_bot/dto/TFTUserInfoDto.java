@@ -1,28 +1,22 @@
 package prod.discord_bot.dto;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 public class TFTUserInfoDto {
 
-    private String userId;
-
-    private String userTag;
-
-    private int summonerLevel;
-
-    private int win;
-
-    private int losses;
-
-    private String tier;
-
-    private String rank;
-
-    private int leaguePoints;
-
-    private LocalDateTime regDate;
-
-    private LocalDateTime updateDate;
+    private final String userId;
+    private final String userTag;
+    private final int summonerLevel;
+    private final int win;
+    private final int losses;
+    private final String tier;
+    private final String rank;
+    private final int leaguePoints;
+    private final LocalDateTime regDate;
+    private final LocalDateTime updateDate;
 
      TFTUserInfoDto(String userId, String userTag, int summonerLevel, int win, int losses, String tier, String rank, int leaguePoints, LocalDateTime regDate, LocalDateTime updateDate) {
         this.userId = userId;
