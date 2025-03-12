@@ -17,4 +17,18 @@ public class RiotApiExceptionController {
         return ApiErrorResponse.error("GOOD", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundTFTSummonerException.class)
+    public ApiErrorResponse<Void> notFoundTFTSummoner(NotFoundTFTSummonerException e) {
+        log.info("{}", e.getMessage());
+        return ApiErrorResponse.error("GOOD", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(MaxSetUserException.class)
+    public ApiErrorResponse<Void> maxSetUserException(MaxSetUserException e) {
+        log.info("{}", e.getMessage());
+        return ApiErrorResponse.error("GOOD", e.getMessage());
+    }
+
 }

@@ -17,6 +17,7 @@ public class RiotGameService {
 
     private final RiotApiRepository riotApiRepository;
 
+
     public SpectatorResponse getCurrentGame(AccountRequest request) {
         AccountDto account = riotApiRepository.getAccountByUsername(request);
         SpectatorDto game = riotApiRepository.getSpectatorGame(new SpectatorRequest(account.getPuuid()));

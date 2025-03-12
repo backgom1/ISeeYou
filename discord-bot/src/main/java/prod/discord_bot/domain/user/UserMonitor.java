@@ -4,19 +4,21 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import prod.discord_bot.dto.TFTUserInfoDto;
-
-import java.time.LocalDateTime;
+import prod.discord_bot.domain.global.BaseEntity;
+import prod.discord_bot.dto.AccountDto;
+import prod.discord_bot.dto.LeagueEntryDto;
+import prod.discord_bot.dto.SummonerDto;
 
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "tft_user_info")
-public class TftUserInfo {
+@Table(name = "user_monitor")
+public class UserMonitor extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "monitor_id")
     private Long id;
 
     @Column(name = "user_id")
@@ -26,7 +28,7 @@ public class TftUserInfo {
     private String userTag;
 
     @Column(name = "summoner_level")
-    private int summonerLevel;
+    private long summonerLevel;
 
     private int win;
 
@@ -39,13 +41,8 @@ public class TftUserInfo {
     @Column(name = "league_points")
     private int leaguePoints;
 
-    @Column(name = "reg_date")
-    private LocalDateTime regDate;
 
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
-
-     private TftUserInfo(String userId, String userTag, int summonerLevel, int win, int losses, String tier, String rank, int leaguePoints, LocalDateTime regDate, LocalDateTime updateDate) {
+     private UserMonitor(String userId, String userTag, long summonerLevel, int win, int losses, String tier, String rank, int leaguePoints) {
         this.userId = userId;
         this.userTag = userTag;
         this.summonerLevel = summonerLevel;
@@ -54,11 +51,9 @@ public class TftUserInfo {
         this.tier = tier;
         this.rank = rank;
         this.leaguePoints = leaguePoints;
-        this.regDate = regDate;
-        this.updateDate = updateDate;
     }
 
-    public static TftUserInfo of(TFTUserInfoDto request){
-        return new TftUserInfo();
+    public static UserMonitor create(AccountDto account, SummonerDto tftSummoner, LeagueEntryDto dto){
+         return new UserMonitor(account.getGameName(),account.getTagLine(),tftSummoner.getSummonerLevel(),dto.getWins(), dto.getLosses(), dto.getTier(), dto.getRank(), dto.getLeaguePoints());
     }
 }
