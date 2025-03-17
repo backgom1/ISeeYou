@@ -3,17 +3,21 @@ package prod.discord_bot.domain;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import prod.discord_bot.domain.channel.ChannelUser;
 import prod.discord_bot.domain.user.UserMonitor;
 import prod.discord_bot.dto.AccountDto;
 import prod.discord_bot.dto.LeagueEntryDto;
-import prod.discord_bot.dto.StartMonitoringResult;
+import prod.discord_bot.dto.DiscordMessageResult;
 import prod.discord_bot.dto.SummonerDto;
 import prod.discord_bot.dto.request.AccountRequest;
-import prod.discord_bot.dto.spectator.dto.SpectatorDto;
-import prod.discord_bot.dto.spectator.request.SpectatorRequest;
 import prod.discord_bot.infra.repository.ChannelUserRepository;
+import prod.discord_bot.dto.MonitorUserDto;
 import prod.discord_bot.infra.repository.RiotApiRepository;
+import prod.discord_bot.infra.repository.UserMonitorRepository;
 import prod.discord_bot.presentation.exception.MaxSetUserException;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -22,8 +26,11 @@ public class DiscordMonitorDomainService {
 
     private final RiotApiRepository riotApiRepository;
     private final ChannelUserRepository channelUserRepository;
+    private final UserMonitorRepository userMonitorRepository;
 
-    public StartMonitoringResult startMonitoring(String message, String channelId) {
+
+    @Transactional
+    public DiscordMessageResult<Void> startMonitoring(String message, String channelId) {
 
         int maxCount = channelUserRepository.countByChannelId(channelId);
         if (maxCount >= 5) {
@@ -33,14 +40,14 @@ public class DiscordMonitorDomainService {
         String[] parts = message.split(" ");
 
         if (parts.length < 2) {
-            return StartMonitoringResult.failure("사용법: `!감시 게임이름#태그`");
+            return DiscordMessageResult.failure("사용법: `!감시 소환사 명#태그`");
         }
 
         String riotId = parts[1];
         String[] riotIdParts = riotId.split("#");
 
         if (riotIdParts.length < 2) {
-            return StartMonitoringResult.failure("올바른 형식: `게임이름#태그`를 입력해주세요!");
+            return DiscordMessageResult.failure("올바른 형식: `소환사 명#태그`를 입력해주세요!");
         }
 
         String gameName = riotIdParts[0];
@@ -48,12 +55,32 @@ public class DiscordMonitorDomainService {
 
         AccountDto account = riotApiRepository.getAccountByUsername(new AccountRequest(gameName, tagLine));
         SummonerDto tftSummoner = riotApiRepository.getTFTSummoner(account.getPuuid());
-        LeagueEntryDto tftLeagueStat = riotApiRepository.getTFTLeagueStat(tftSummoner.getId());
+        List<LeagueEntryDto> tftLeagueStat = riotApiRepository.getTFTLeagueStat(tftSummoner.getId());
 
-        UserMonitor.create(account,tftSummoner,tftLeagueStat);
+        for (LeagueEntryDto leagueEntryDto : tftLeagueStat) {
+            UserMonitor userMonitor = UserMonitor.create(account, tftSummoner, leagueEntryDto);
+            UserMonitor savedUserMonitor = userMonitorRepository.save(userMonitor);
+            ChannelUser channelUser = ChannelUser.create(channelId, savedUserMonitor);
+            channelUserRepository.save(channelUser);
+        }
+
+        return DiscordMessageResult.success("소환사 감시를 정상적으로 등록했습니다.");
+    }
 
 
+    @Transactional(readOnly = true)
+    public DiscordMessageResult<String> findMonitorUsersByChannelId(String channelId) {
+        List<MonitorUserDto> monitorUsersByChannelId = channelUserRepository.findMonitorUsersByChannelId(channelId);
+        StringBuilder result = new StringBuilder();
+        for (int index = 1; index <= monitorUsersByChannelId.size(); index++) {
+            MonitorUserDto user = monitorUsersByChannelId.get(index - 1);
+            if (index == monitorUsersByChannelId.size()) {
+                result.append(index).append(".").append(user.getUserId()).append("#").append(user.getUserTag());
+            } else {
+                result.append(index).append(".").append(user.getUserId()).append("#").append(user.getUserTag()).append("\n");
+            }
 
-        return StartMonitoringResult.success("소환사 감시를 정상적으로 등록했습니다.");
+        }
+        return DiscordMessageResult.success("감시 목록을 조회했습니다.", result.toString());
     }
 }

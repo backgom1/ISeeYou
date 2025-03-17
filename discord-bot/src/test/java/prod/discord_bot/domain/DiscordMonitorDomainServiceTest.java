@@ -10,6 +10,7 @@ import prod.discord_bot.domain.channel.ChannelUser;
 import prod.discord_bot.domain.user.UserMonitor;
 import prod.discord_bot.dto.AccountDto;
 import prod.discord_bot.dto.LeagueEntryDto;
+import prod.discord_bot.dto.MiniSeriesDTO;
 import prod.discord_bot.dto.SummonerDto;
 import prod.discord_bot.infra.repository.ChannelUserRepository;
 import prod.discord_bot.infra.repository.UserMonitorRepository;
@@ -33,11 +34,11 @@ class DiscordMonitorDomainServiceTest {
 
     @BeforeEach
     void setUp() {
-        UserMonitor userMonitor1 = UserMonitor.create(new AccountDto("123","흰오목눈이","KR1") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq","dqwdw",100,100,100,false,false,false,false));
-        UserMonitor userMonitor2 = UserMonitor.create(new AccountDto("124","흰오목눈이","KR2") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq","dqwdw",100,100,100,false,false,false,false));
-        UserMonitor userMonitor3 = UserMonitor.create(new AccountDto("125","흰오목눈이","KR3") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq","dqwdw",100,100,100,false,false,false,false));
-        UserMonitor userMonitor4 = UserMonitor.create(new AccountDto("126","흰오목눈이","KR4") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq","dqwdw",100,100,100,false,false,false,false));
-        UserMonitor userMonitor5 = UserMonitor.create(new AccountDto("127","흰오목눈이","KR5") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq","dqwdw",100,100,100,false,false,false,false));
+        UserMonitor userMonitor1 = UserMonitor.create(new AccountDto("123","흰오목눈이","KR1") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq",20,"dqwdw","qdqdd",100,100,100,false,false,false,false,new MiniSeriesDTO()));
+        UserMonitor userMonitor2 = UserMonitor.create(new AccountDto("124","흰오목눈이","KR2") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq",20,"dqwdw","qdqdd",100,100,100,false,false,false,false,new MiniSeriesDTO()));
+        UserMonitor userMonitor3 = UserMonitor.create(new AccountDto("125","흰오목눈이","KR3") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq",20,"dqwdw","qdqdd",100,100,100,false,false,false,false,new MiniSeriesDTO()));
+        UserMonitor userMonitor4 = UserMonitor.create(new AccountDto("126","흰오목눈이","KR4") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq",20,"dqwdw","qdqdd",100,100,100,false,false,false,false,new MiniSeriesDTO()));
+        UserMonitor userMonitor5 = UserMonitor.create(new AccountDto("127","흰오목눈이","KR5") ,new SummonerDto("123","3123123","123",12341,123412313,1000), new LeagueEntryDto("123","1234123","RANK","IV","kdjwjdiq",20,"dqwdw","qdqdd",100,100,100,false,false,false,false,new MiniSeriesDTO()));
 
         userMonitorRepository.saveAll(List.of(userMonitor1, userMonitor2, userMonitor3, userMonitor4, userMonitor5));
 

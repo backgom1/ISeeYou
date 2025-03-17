@@ -14,6 +14,9 @@ import prod.discord_bot.presentation.exception.NotFoundTFTSummonerException;
 import prod.discord_bot.presentation.exception.NotPlayingGameException;
 import prod.discord_bot.infra.config.RiotConfig;
 
+import java.util.List;
+import java.util.Set;
+
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -50,14 +53,17 @@ public class RiotApiRepository {
     }
 
 
-    public LeagueEntryDto getTFTLeagueStat(String summonerId) {
-        return riotConfig.baseClientV5().get()
+    public List<LeagueEntryDto> getTFTLeagueStat(String summonerId) {
+
+        LeagueEntryDto[] body = riotConfig.baseClientV5().get()
                 .uri("tft/league/v1/entries/by-summoner/{summonerId}", summonerId)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, ((httpRequest, response) -> {
                     throw new NotFoundTFTSummonerException();
                 }))
-                .body(LeagueEntryDto.class);
+                .body(LeagueEntryDto[].class);
+
+        return List.of(body);
     }
 
 

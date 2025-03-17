@@ -7,9 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import prod.discord_bot.domain.DiscordMonitorDomainService;
-import prod.discord_bot.dto.StartMonitoringResult;
+import prod.discord_bot.dto.DiscordMessageResult;
 import prod.discord_bot.infra.discord.config.DiscordBotStarter;
-import prod.discord_bot.presentation.exception.MaxSetUserException;
 
 
 @Service
@@ -27,23 +26,32 @@ public class DiscordCommandService extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-
         if (event.getAuthor().isBot()) return;
 
         String message = event.getMessage().getContentRaw();
 
         if (message.startsWith("!감시")) {
-        }
 
 
-        if (message.startsWith("!감시")) {
             String channelId = event.getChannel().getId();
-            StartMonitoringResult result = discordMonitorDomainService.startMonitoring(message, channelId);
+            DiscordMessageResult<Void> result = discordMonitorDomainService.startMonitoring(message, channelId);
 
             event.getChannel()
                     .sendMessage(result.getMessage())
                     .queue();
+
+        } else if (message.equals("!목록")) {
+            String channelId = event.getChannel().getId();
+            DiscordMessageResult<String> result = discordMonitorDomainService.findMonitorUsersByChannelId(channelId);
+
+            event.getChannel()
+                    .sendMessage(result.getData())
+                    .queue();
+
+        } else {
+            event.getChannel().sendMessage("존재하지 않는 명령어입니다.").queue();
         }
+
 
     }
 
