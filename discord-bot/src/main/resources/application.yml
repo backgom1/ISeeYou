@@ -16,3 +16,17 @@ spring:
     password: "1"
     driver-class-name: org.h2.Driver
 
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: QuartzScheduler
+          jobStore:
+            tablePrefix: QRTZ_
+            isClustered: false
+          threadPool:
+            threadCount: 5
