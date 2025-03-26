@@ -1,10 +1,14 @@
 package prod.discord_bot.dto.spectator.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SpectatorDto {
     private long gameId;
     private int mapId;
