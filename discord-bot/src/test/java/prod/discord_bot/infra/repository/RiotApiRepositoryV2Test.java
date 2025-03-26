@@ -1,6 +1,5 @@
 package prod.discord_bot.infra.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,13 +7,11 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 import prod.discord_bot.dto.AccountDto;
 import prod.discord_bot.dto.request.AccountRequest;
 import prod.discord_bot.dto.spectator.dto.SpectatorDto;
 import prod.discord_bot.dto.spectator.request.SpectatorRequest;
-import prod.discord_bot.dto.spectator.response.NotPlayingGameResponse;
 import prod.discord_bot.infra.config.RiotConfig;
 import prod.discord_bot.presentation.exception.NotPlayingGameException;
 
@@ -26,7 +23,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RiotApiRepositoryTest {
+class RiotApiRepositoryV2Test {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private RestClient restClient;
@@ -35,7 +32,7 @@ class RiotApiRepositoryTest {
     private RiotConfig riotConfig;
 
     @InjectMocks
-    private RiotApiRepository riotApiRepository;
+    private RiotApiRepositoryV1 riotApiRepositoryV1;
 
     @Mock
     private SpectatorDto mockSpectator;
@@ -59,7 +56,7 @@ class RiotApiRepositoryTest {
                 .thenReturn(mockResponse);
 
         // when
-        AccountDto result = riotApiRepository.getAccountByUsername(request);
+        AccountDto result = riotApiRepositoryV1.getAccountByUsername(request);
 
         // then
         assertThat(result).isNotNull();
@@ -87,7 +84,7 @@ class RiotApiRepositoryTest {
                 .thenReturn(mockSpectator);
 
         // when
-        SpectatorDto spectatorGame = riotApiRepository.getSpectatorGame(request);
+        SpectatorDto spectatorGame = riotApiRepositoryV1.getSpectatorGame(request);
 
         // then
         assertThat(spectatorGame).isNotNull();
@@ -111,7 +108,7 @@ class RiotApiRepositoryTest {
                 .thenThrow(new NotPlayingGameException());
 
         //when&then
-        assertThatThrownBy(() -> riotApiRepository.getSpectatorGame(request))
+        assertThatThrownBy(() -> riotApiRepositoryV1.getSpectatorGame(request))
                 .isInstanceOf(NotPlayingGameException.class);
 
     }

@@ -6,4 +6,6 @@ import prod.discord_bot.domain.monitor.MonitoringSchedule;
 public interface MonitoringScheduleRepository extends JpaRepository<MonitoringSchedule, Long> {
 
     void deleteByChannelId(String channelId);
+
+    boolean existsByChannelId(String channelId);
 }

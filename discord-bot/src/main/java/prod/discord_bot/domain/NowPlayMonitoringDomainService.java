@@ -18,6 +18,11 @@ public class NowPlayMonitoringDomainService {
 
     private final MonitoringScheduleRepository monitoringScheduleRepository;
 
+
+    public boolean hasMonitoringSchedule(String channelId) {
+        return monitoringScheduleRepository.existsByChannelId(channelId);
+    }
+
     @Transactional
     public void startMonitoring(String channelId) {
         log.info("모니터링 감시 시작 -> {} ", channelId);
@@ -49,13 +54,12 @@ public class NowPlayMonitoringDomainService {
     }
 
 
-    //void -> 반환 값 추가
+    @Transactional
     public void shutdownMonitoring(String channelId) {
         log.info("모니터링 감시 종료 -> {} ", channelId);
         try {
             JobKey jobKey = new JobKey(channelId, "monitoring-jobs");
 
-            // ✅ Job 삭제
             boolean deleted = scheduler.deleteJob(jobKey);
 
             //TODO 종료를 뱉어 내는 로직이 필요함

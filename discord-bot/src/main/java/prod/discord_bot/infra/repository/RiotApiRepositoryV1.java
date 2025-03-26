@@ -7,20 +7,22 @@ import org.springframework.stereotype.Repository;
 import prod.discord_bot.dto.AccountDto;
 import prod.discord_bot.dto.LeagueEntryDto;
 import prod.discord_bot.dto.SummonerDto;
-import prod.discord_bot.dto.spectator.dto.SpectatorDto;
 import prod.discord_bot.dto.request.AccountRequest;
+import prod.discord_bot.dto.spectator.dto.SpectatorDto;
 import prod.discord_bot.dto.spectator.request.SpectatorRequest;
+import prod.discord_bot.infra.config.RiotConfig;
 import prod.discord_bot.presentation.exception.NotFoundTFTSummonerException;
 import prod.discord_bot.presentation.exception.NotPlayingGameException;
-import prod.discord_bot.infra.config.RiotConfig;
 
 import java.util.List;
-import java.util.Set;
 
+/**
+ * REST API 통신에 필요한 레포지토리 클래스
+ */
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class RiotApiRepository {
+public class RiotApiRepositoryV1 {
 
     private final RiotConfig riotConfig;
 

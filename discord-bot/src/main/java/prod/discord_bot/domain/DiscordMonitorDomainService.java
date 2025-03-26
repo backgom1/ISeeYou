@@ -13,7 +13,7 @@ import prod.discord_bot.dto.SummonerDto;
 import prod.discord_bot.dto.request.AccountRequest;
 import prod.discord_bot.infra.repository.ChannelUserRepository;
 import prod.discord_bot.dto.MonitorUserDto;
-import prod.discord_bot.infra.repository.RiotApiRepository;
+import prod.discord_bot.infra.repository.RiotApiRepositoryV2;
 import prod.discord_bot.infra.repository.UserMonitorRepository;
 import prod.discord_bot.presentation.exception.MaxSetUserException;
 
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiscordMonitorDomainService {
 
-    private final RiotApiRepository riotApiRepository;
+    private final RiotApiRepositoryV2 riotApiRepositoryV2;
     private final ChannelUserRepository channelUserRepository;
     private final UserMonitorRepository userMonitorRepository;
 
@@ -53,9 +53,9 @@ public class DiscordMonitorDomainService {
         String gameName = riotIdParts[0];
         String tagLine = riotIdParts[1];
 
-        AccountDto account = riotApiRepository.getAccountByUsername(new AccountRequest(gameName, tagLine));
-        SummonerDto tftSummoner = riotApiRepository.getTFTSummoner(account.getPuuid());
-        List<LeagueEntryDto> tftLeagueStat = riotApiRepository.getTFTLeagueStat(tftSummoner.getId());
+        AccountDto account = riotApiRepositoryV2.getAccountByUsername(new AccountRequest(gameName, tagLine));
+        SummonerDto tftSummoner = riotApiRepositoryV2.getTFTSummoner(account.getPuuid());
+        List<LeagueEntryDto> tftLeagueStat = riotApiRepositoryV2.getTFTLeagueStat(tftSummoner.getId());
 
         for (LeagueEntryDto leagueEntryDto : tftLeagueStat) {
             UserMonitor userMonitor = UserMonitor.create(account, tftSummoner, leagueEntryDto);

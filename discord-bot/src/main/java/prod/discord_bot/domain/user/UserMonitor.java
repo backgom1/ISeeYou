@@ -36,6 +36,7 @@ public class UserMonitor extends BaseEntity {
 
     private String tier;
 
+    @Column(name = "rank_level")
     private String rank;
 
     @Column(name = "league_points")

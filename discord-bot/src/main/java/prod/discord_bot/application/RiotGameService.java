@@ -8,19 +8,20 @@ import prod.discord_bot.dto.request.AccountRequest;
 import prod.discord_bot.dto.spectator.dto.SpectatorDto;
 import prod.discord_bot.dto.spectator.request.SpectatorRequest;
 import prod.discord_bot.dto.spectator.response.SpectatorResponse;
-import prod.discord_bot.infra.repository.RiotApiRepository;
+import prod.discord_bot.infra.repository.RiotApiRepositoryV1;
+import prod.discord_bot.infra.repository.RiotApiRepositoryV2;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RiotGameService {
 
-    private final RiotApiRepository riotApiRepository;
+    private final RiotApiRepositoryV1 riotApiRepositoryV1;
 
 
     public SpectatorResponse getCurrentGame(AccountRequest request) {
-        AccountDto account = riotApiRepository.getAccountByUsername(request);
-        SpectatorDto game = riotApiRepository.getSpectatorGame(new SpectatorRequest(account.getPuuid()));
+        AccountDto account = riotApiRepositoryV1.getAccountByUsername(request);
+        SpectatorDto game = riotApiRepositoryV1.getSpectatorGame(new SpectatorRequest(account.getPuuid()));
         return SpectatorResponse.ok(game.getGameType(),game.getGameLength());
     }
 }
