@@ -16,4 +16,9 @@ public interface ChannelUserRepository extends JpaRepository<ChannelUser, Long> 
             "join UserMonitor um on um.id = cu.userMonitor.id " +
             "where cu.channelId =:channelId")
     List<MonitorUserDto> findMonitorUsersByChannelId(@Param("channelId") String channelId);
+
+    @Query("select count(um) from ChannelUser cu " +
+            "join UserMonitor um on um.id = cu.userMonitor.id " +
+            "where um.userId =:userId and um.userTag=:userTag and cu.channelId =:channelId")
+    int duplicateChannelUser(@Param("userId") String userId, @Param("userTag") String userTag, @Param("channelId") String channelId);
 }

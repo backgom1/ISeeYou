@@ -15,6 +15,7 @@ import prod.discord_bot.infra.repository.ChannelUserRepository;
 import prod.discord_bot.dto.MonitorUserDto;
 import prod.discord_bot.infra.repository.RiotApiRepositoryV2;
 import prod.discord_bot.infra.repository.UserMonitorRepository;
+import prod.discord_bot.presentation.exception.DuplicateUserException;
 import prod.discord_bot.presentation.exception.MaxSetUserException;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class DiscordMonitorDomainService {
     public DiscordMessageResult<Void> startMonitoring(String message, String channelId) {
 
         int maxCount = channelUserRepository.countByChannelId(channelId);
+
         if (maxCount >= 5) {
             throw new MaxSetUserException();
         }
@@ -53,6 +55,10 @@ public class DiscordMonitorDomainService {
         String gameName = riotIdParts[0];
         String tagLine = riotIdParts[1];
 
+        if (channelUserRepository.duplicateChannelUser(gameName, tagLine, channelId) > 0) {
+            return DiscordMessageResult.failure("채널에 등록된 사용자입니다.");
+        }
+
         AccountDto account = riotApiRepositoryV2.getAccountByUsername(new AccountRequest(gameName, tagLine));
         SummonerDto tftSummoner = riotApiRepositoryV2.getTFTSummoner(account.getPuuid());
         List<LeagueEntryDto> tftLeagueStat = riotApiRepositoryV2.getTFTLeagueStat(tftSummoner.getId());
@@ -65,6 +71,10 @@ public class DiscordMonitorDomainService {
         }
 
         return DiscordMessageResult.success("소환사 감시를 정상적으로 등록했습니다.");
+    }
+
+    public DiscordMessageResult<Void> endMonitoring(String message, String channelId) {
+        return DiscordMessageResult.success("소환사 감시를 정상적으로 제거했습니다.");
     }
 
 
